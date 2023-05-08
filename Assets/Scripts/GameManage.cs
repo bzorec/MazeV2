@@ -22,9 +22,6 @@ public class GameManage : MonoBehaviour
     {
         Debug.Log("Startbutton clicked: " + SceneUtility.GetBuildIndexByScenePath("Playground"));
         SceneManager.LoadSceneAsync(0);
-
-
-        // nadomestite "Ime prizora za igro" z imenom prizora, kjer se zaène igra
     }
 
     public void PauseGame()
