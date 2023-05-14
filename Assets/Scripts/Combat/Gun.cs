@@ -17,11 +17,19 @@ public class Gun : MonoBehaviour
     private float nextFireTime = 0f;
     private Animator animator;
 
+    //Shooting sound control
+    private AudioClip shootingSound;
+    private AudioSource audioSource;
+
     private void Awake()
     {
         // Get the animator component of the gun
         animator = GetComponent<Animator>();
         screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+
+        //Add audio
+        audioSource = gameObject.AddComponent<AudioSource>();
+        shootingSound = gunData.shootingSound;
     }
 
     private void Start()
@@ -64,6 +72,9 @@ public class Gun : MonoBehaviour
             animator.Play("Shoot");
         }
         gunData.currentAmmoInMag--;
+
+        // Play the shooting sound
+        audioSource.PlayOneShot(shootingSound);
 
 
         // Cast a ray from the camera to the center of the screen

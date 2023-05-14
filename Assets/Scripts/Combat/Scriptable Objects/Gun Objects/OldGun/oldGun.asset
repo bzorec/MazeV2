@@ -16,10 +16,11 @@ MonoBehaviour:
   damage: 20
   maxDistance: 20
   fireRate: 200
-  bulletSpeed: 30
+  bulletSpeed: 60
   magSize: 11
   maxAmmo: 33
   reloadTime: 10
+  shootingSound: {fileID: 8300000, guid: 01730ea1dd4cc2644ba6db26a32cdea9, type: 3}
   reloading: 0
-  currentAmmo: 22
-  currentAmmoInMag: 11
+  currentAmmo: 0
+  currentAmmoInMag: 0

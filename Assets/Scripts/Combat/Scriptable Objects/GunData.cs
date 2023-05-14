@@ -18,9 +18,11 @@ public class GunData : ScriptableObject
     [Header("Reloading")]
     public int magSize;
     public int maxAmmo;
-
-    
     public float reloadTime;
+
+    [Header("Reloading")]
+    public AudioClip shootingSound;
+
     [HideInInspector] public bool reloading;
     [HideInInspector] public int currentAmmo;
     [HideInInspector] public int currentAmmoInMag;

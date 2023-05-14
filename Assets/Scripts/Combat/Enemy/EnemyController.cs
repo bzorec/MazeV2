@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,6 +28,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     float waitTime = 4f;
     float waitAttack = 2f;
 
+    private bool dead = false;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -34,18 +38,19 @@ public class EnemyController : MonoBehaviour, IDamageable
         patrolPoint = GetRandomPatrolPoint();
         timeDestinationReached = Time.time;
         lastAttack = Time.time;
+
+        animator.SetBool("isDead", false);
+
     }
 
 
     void Update()
     {
 
-        animator.SetBool("IsRunning", true);
-        animator.SetBool("isDead", false);
-        animator.SetBool("damageTaken", false);
+        //animator.SetBool("IsRunning", true);
         float distance = Vector3.Distance(target.position, transform.position);
 
-        /*if(distance <= lookRadius)
+        if(dead == false && distance <= lookRadius)
         {
             animator.SetBool("IsWalking", false);
             Atack(distance);
@@ -65,9 +70,10 @@ public class EnemyController : MonoBehaviour, IDamageable
             {
                 animator.SetBool("IsWalking", false);
             }
-        }*/
 
-        
+        }
+
+
 
 
 
@@ -196,11 +202,27 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        animator.SetBool("damageTaken", true);
-        health -= damage;
-        if (health <= 0) {
+        if(health - damage <= 0)
+        {
             animator.SetBool("isDead", true);
-            //Destroy(gameObject);
+            dead = true;
+            agent.isStopped = true;
+        }
+
+        health -= damage;
+        animator.SetTrigger("damageTaken");        
+        health -= damage;
+
+        if (health <= 0) {
+
+            StartCoroutine(DestroyAfterDelay(5f)); // Wait for 5 seconds before destroying
         } 
+
+    }
+
+    IEnumerator DestroyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 }
