@@ -16,10 +16,10 @@ MonoBehaviour:
   damage: 20
   maxDistance: 20
   fireRate: 200
-  bulletSpeed: 5
+  bulletSpeed: 20
   magSize: 11
   maxAmmo: 33
   reloadTime: 10
   reloading: 0
   currentAmmo: 22
-  currentAmmoInMag: 6
+  currentAmmoInMag: 11
