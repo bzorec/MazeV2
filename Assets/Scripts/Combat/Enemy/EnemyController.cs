@@ -46,133 +46,71 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     void Update()
     {
-
-        //animator.SetBool("IsRunning", true);
         float distance = Vector3.Distance(target.position, transform.position);
 
         if(dead == false && distance <= lookRadius)
         {
             animator.SetBool("IsWalking", false);
+            animator.SetBool("IsRunning", true);
             Atack(distance);
             
         }
         else
         {
             animator.SetBool("IsRunning", false);
-            animator.SetBool("IsMeleeRange", false);
-            animator.SetBool("IsJumpAttackRange", false);
-
-            if(Time.time >= timeDestinationReached + waitTime) {
-                animator.SetBool("IsWalking", true);
-                Patrol();
-            }
-            else
-            {
-                animator.SetBool("IsWalking", false);
-            }
-
-        }
-
-
-
-
-
-        /*if (distance <= lookRadius)
-        {
-            agent.SetDestination(target.position);
-
-            if (distance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-
-                if (distance <= meleeRadius)
-                {
-                    animator.SetBool("IsMeleeRange", true);
-                }
-                else
-                {
-                    animator.SetBool("IsMeleeRange", false);
-                }
-
-                if (distance <= jumpAttackRadius && distance > meleeRadius)
-                {
-                    animator.SetBool("IsJumpAttackRange", true);
-                }
-                else
-                {
-                    animator.SetBool("IsJumpAttackRange", false);
-                }
-            }
-            else
-            {
-                animator.SetBool("IsMeleeRange", false);
-                animator.SetBool("IsJumpAttackRange", false);
-                animator.SetBool("IsRunning", true);
-            }
-        }
-        else
-        {
-            animator.SetBool("IsRunning", false);
-            animator.SetBool("IsMeleeRange", false);
-            animator.SetBool("IsJumpAttackRange", false);
 
             Patrol();
-        }*/
+        }
     }
 
     void Atack(float distanceFromTarget)
     {
-        animator.SetBool("IsRunning", true);
         agent.SetDestination(target.position);
+
+        animator.ResetTrigger("IsJumpAttackRange");
+        animator.ResetTrigger("IsMeleeRange");
 
         if (distanceFromTarget <= jumpAttackRadius && distanceFromTarget > meleeRadius && Time.time >= lastAttack + waitAttack)
         {
             FaceTarget();
-            animator.SetBool("IsJumpAttackRange", true);
+            //animator.SetBool("IsJumpAttackRange", true);
+            animator.SetTrigger("IsJumpAttackRange");
             lastAttack = Time.time;
-        }
-        else
-        {
-            animator.SetBool("IsJumpAttackRange", false);
         }
 
         if (distanceFromTarget <= meleeRadius && Time.time >= lastAttack + waitAttack)
         {
             FaceTarget();
-            animator.SetBool("IsMeleeRange", true);
+            //animator.SetBool("IsMeleeRange", true);
+            animator.SetTrigger("IsMeleeRange");
             lastAttack = Time.time;
         }
-        else
-        {
-            animator.SetBool("IsMeleeRange", false);
-        }
+
     }
 
     void Patrol()
     {
-        if (agent.hasPath && agent.remainingDistance <= agent.stoppingDistance + 2)
+        if (agent.hasPath && agent.remainingDistance > agent.stoppingDistance)
         {
-            // The agent has reached its destination
-            Debug.Log("destination set");
-            timeDestinationReached = Time.time;
-            patrolPoint = GetRandomPatrolPoint();
-            agent.SetDestination(patrolPoint);
+            // Enemy has a set destination and is still far from reaching it
+            Debug.Log("Enemy has a destination set");
 
-        }
-        else if (!agent.hasPath)
-        {
-            // The agent doesn't have a path
-            Debug.Log("first destinatoin");
-            patrolPoint = GetRandomPatrolPoint();
-            agent.SetDestination(patrolPoint);
+            checkForWall();
 
+            if (timeDestinationReached < Time.time - 15f)
+            {
+                animator.SetBool("IsWalking", true);
+                patrolPoint = GetRandomPatrolPoint();
+                agent.SetDestination(patrolPoint);
+            }
         }
         else
         {
-            // The agent is still moving towards its destination
-        }
+            // Enemy either doesn't have a destination or has reached it
+            Debug.Log("Enemy doesn't have a destination set");
 
-        if(timeDestinationReached <= Time.time - 15f) {
+            animator.SetBool("IsWalking", true);
+            Debug.Log("destination set");
             patrolPoint = GetRandomPatrolPoint();
             agent.SetDestination(patrolPoint);
         }
@@ -210,7 +148,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
 
         health -= damage;
-        animator.SetTrigger("damageTaken");        
+        animator.SetTrigger("damageTaken");
         health -= damage;
 
         if (health <= 0) {
@@ -218,6 +156,27 @@ public class EnemyController : MonoBehaviour, IDamageable
             StartCoroutine(DestroyAfterDelay(5f)); // Wait for 5 seconds before destroying
         } 
 
+    }
+
+    public void checkForWall()
+    {
+        // Get the direction of the enemy's movement
+        Vector3 movementDirection = agent.velocity.normalized;
+
+        // Cast a ray in the direction of movement
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, movementDirection, out hit, 1f))
+        {
+            // Check if the ray hits a wall (based on the collision layer you set)
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Walls"))
+            {
+                // Wall detected, handle the situation (e.g., change patrol behavior, attack, etc.)
+                Debug.Log("Wall detected!");
+
+                // Example: Stop the enemy from moving
+                agent.SetDestination(GetRandomPatrolPoint());
+            }
+        }
     }
 
     IEnumerator DestroyAfterDelay(float delay)
