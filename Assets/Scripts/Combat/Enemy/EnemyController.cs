@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public float meleeRadius = 2f;
     public float jumpAttackRadius = 4f;
     public float patrolRadius = 5f;  // The radius around the enemy's starting position in which patrol points can be generated
+    public bool spawnable = false;
 
     //public HumanBodyBones bone;
     //public SphereCollider sphereCollider;
@@ -26,7 +27,10 @@ public class EnemyController : MonoBehaviour, IDamageable
     float timeDestinationReached;  // The time when the destination was reached
     float lastAttack;
     float waitTime = 4f;
-    float waitAttack = 2f;
+    public float waitAttack = 2f;
+
+    public GameObject prefab1;
+    public GameObject prefab2;
 
     private bool dead = false;
 
@@ -101,7 +105,7 @@ public class EnemyController : MonoBehaviour, IDamageable
             {
                 animator.SetBool("IsWalking", true);
                 patrolPoint = GetRandomPatrolPoint();
-                agent.SetDestination(patrolPoint);
+                agent.SetDestination(patrolPoint);  
             }
         }
         else
@@ -140,6 +144,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
+        if(dead) return;
         if(health - damage <= 0)
         {
             animator.SetBool("isDead", true);
@@ -152,6 +157,17 @@ public class EnemyController : MonoBehaviour, IDamageable
         health -= damage;
 
         if (health <= 0) {
+
+            if(spawnable)
+            {
+                // Spawn the first prefab
+                GameObject instance1 = Instantiate(prefab1, transform.position, Quaternion.identity);
+                instance1.GetComponent<EnemyController>().target = this.target;
+
+                // Spawn the second prefab
+                GameObject instance2 = Instantiate(prefab2, transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity);
+                instance2.GetComponent<EnemyController>().target = this.target;
+            }
 
             StartCoroutine(DestroyAfterDelay(5f)); // Wait for 5 seconds before destroying
         } 
