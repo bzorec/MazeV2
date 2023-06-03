@@ -10,29 +10,38 @@ public class GameManage : MonoBehaviour
 {
     // Start is called before the first frame update
     public Button start;
-    public Button pauseButton;
+    public Button continueButton;
     public Button resetButton;
+    public Button exitButtton;
 
     void Start()
     {
         start.onClick.AddListener(StartGame);
-        pauseButton.onClick.AddListener(PauseGame);
+        continueButton.onClick.AddListener(ContinueGame);
         resetButton.onClick.AddListener(ResetGame);
+        exitButtton.onClick.AddListener(ExitGame);
 
     }
     public void StartGame()
     {
         Debug.Log("Startbutton clicked: " + SceneUtility.GetBuildIndexByScenePath("Playground"));
         SceneManager.LoadSceneAsync(0);
-
-
         // nadomestite "Ime prizora za igro" z imenom prizora, kjer se zaène igra
     }
 
 
-    public void PauseGame()
+    public void ContinueGame()
     {
-        Time.timeScale = 0;
+        SceneManager.LoadScene("playground");
+    }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     void ResetGame()
