@@ -53,6 +53,16 @@ public class Gun : MonoBehaviour
         }*/
     }
 
+    public void ResetBullets()
+    {
+        if (gunData != null)
+        {
+            gunData.currentAmmoInMag = gunData.getMagSize();
+            gunData.currentAmmo = gunData.getMaxAmmo() - gunData.getMagSize();
+        }
+    }
+
+
     private void Shoot()
     {
         if (gunData == null)

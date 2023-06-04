@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CoinCollecting : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class CoinCollecting : MonoBehaviour
         _totalCoins = coins.Length;
         _mRigidBody = GetComponent<Rigidbody>();
         _mAudioSource = GetComponent<AudioSource>();
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -29,7 +31,6 @@ public class CoinCollecting : MonoBehaviour
         Destroy(other.gameObject);
     }
 
-
     // Call this method to get the number of collected coins
     public int GetCollectedCoins()
     {
@@ -41,5 +42,19 @@ public class CoinCollecting : MonoBehaviour
     public int GetTotalCoins()
     {
         return _totalCoins;
+    }
+
+    public void ResetCoins()
+    {
+        _collectedCoins = 0;
+    }
+    private void Update()
+    {
+        if (_collectedCoins == _totalCoins)
+        {
+            // Call scen "finish_game"
+            Debug.Log("Startbutton clicked: " + SceneUtility.GetBuildIndexByScenePath("finish_game"));
+            SceneManager.LoadSceneAsync(0);
+        }
     }
 }
