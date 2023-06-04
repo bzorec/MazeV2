@@ -10,6 +10,7 @@ public class Finish : MonoBehaviour
     // Start is called before the first frame update
     public Button start;
     public Button exitButtton;
+
     void Start()
     {
         start.onClick.AddListener(StartGame);
@@ -21,6 +22,7 @@ public class Finish : MonoBehaviour
         Debug.Log("Startbutton clicked: " + SceneUtility.GetBuildIndexByScenePath("Playground"));
         SceneManager.LoadSceneAsync(0);
     }
+
     public void ExitGame()
     {
 #if UNITY_EDITOR
@@ -34,6 +36,11 @@ public class Finish : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GameObject coinObject = GameObject.Find("Coin");
+
+        if (coinObject != null)
+            return;
+
+        SceneManager.LoadSceneAsync(0);
     }
 }
