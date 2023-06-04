@@ -1458,7 +1458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 79, y: 90}
+  m_AnchoredPosition: {x: 79, y: 121}
   m_SizeDelta: {x: 176.9431, y: 57.582}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2020683193
@@ -1481,12 +1481,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '-------Dobrodosli-------
-
-    Z zacetek igre pritisnite START.
-
-    Igro
-    koncate ko poberete vse zlatnike!'
+  m_text: "-------Dobrodosli-------\nZ zacetek igre pritisnite START.\nIgro koncate
+    ko poberete vse zlatnike!\n  Za premikanje uporabljajte \ncrke (A S D W) ali
+    pa puscice"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
